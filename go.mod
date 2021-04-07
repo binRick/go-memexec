@@ -1,3 +1,3 @@
-module github.com/amenzhinsky/go-memexec
+module github.com/binRick/go-memexec
 
 go 1.12
