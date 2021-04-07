@@ -9,6 +9,7 @@ import (
 // Exec is an in-memory executable code unit.
 type Exec struct {
 	executor
+	Path string
 }
 
 const (
@@ -38,7 +39,9 @@ func New(b []byte) (*Exec, error) {
 		return nil, err
 	}
 
-	var exe Exec
+	exe := Exec{
+		Path: f.Name(),
+	}
 	if err = exe.prepare(f); err != nil {
 		return nil, err
 	}

@@ -1,6 +1,7 @@
 package memexec
 
 import (
+	"github.com/k0kubun/pp"
 	"io/ioutil"
 	"os/exec"
 	"testing"
@@ -8,6 +9,7 @@ import (
 
 func TestCommand(t *testing.T) {
 	exe := newEchoExec(t)
+	pp.Println(exe)
 	defer func() {
 		if err := exe.Close(); err != nil {
 			t.Fatalf("close error: %s", err)
