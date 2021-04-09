@@ -1,9 +1,11 @@
 package memexec
 
 import (
+	"crypto/md5"
 	"fmt"
 	"io/ioutil"
 	"os"
+
 	"os/exec"
 )
 
@@ -12,6 +14,7 @@ type Exec struct {
 	executor
 	Path    string
 	TmpPath string
+	Hash    string
 }
 
 const (
@@ -53,11 +56,20 @@ func New(b []byte) (*Exec, error) {
 		return nil, err
 	}
 
+	hash := md5.New()
+	hash.Write(b)
+	hash_str := fmt.Sprintf("%x", md5.Sum(b))
+	if DEBUG_MODE {
+		fmt.Printf("hash=%s\n", hash_str)
+	}
+
 	exe := Exec{
 		Path:    f.Name(),
 		TmpPath: f.Name(),
+		Hash:    hash_str,
 	}
-	if err = exe.prepare(f); err != nil {
+
+	if err = exe.prepare(f, exe.Hash); err != nil {
 		return nil, err
 	}
 	if err = f.Close(); err != nil {

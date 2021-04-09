@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	//TEST_CMD = `echo`
-	TEST_CMD = `echo.static`
+	TEST_CMD = `echo`
+	//TEST_CMD = `echo.static`
 )
 
 func TestCommand(t *testing.T) {

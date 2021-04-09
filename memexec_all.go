@@ -8,11 +8,12 @@ type executor struct {
 	f             *os.File
 	ProcExecution bool
 	TmpPath       string
+	Hash          string
 }
 
-func (e *executor) prepare(t *os.File, PROC_EXECUTION bool) error {
+func (e *executor) prepare(t *os.File) error {
 	e.f = t
-	e.ProcExecution = PROC_EXECUTION
+	//	e.ProcExecution = PROC_EXECUTION
 	//e.ProcExecution = false
 	return nil
 }
