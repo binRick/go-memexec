@@ -58,7 +58,7 @@ func (e *executor) prepare(t *os.File, hash_str string) error {
 		fmt.Printf("cache hit: %s => %d\n", hash_str, cached_execs[hash_str])
 		ldd_qty = cached_execs[hash_str]
 	} else {
-		fmt.Println("cache mmiss")
+		fmt.Println("cache miss")
 		files_list := []string{
 			f.Name(),
 		}
