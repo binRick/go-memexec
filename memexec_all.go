@@ -5,11 +5,15 @@ package memexec
 import "os"
 
 type executor struct {
-	f *os.File
+	f             *os.File
+	ProcExecution bool
+	TmpPath       string
 }
 
-func (e *executor) prepare(t *os.File) error {
+func (e *executor) prepare(t *os.File, PROC_EXECUTION bool) error {
 	e.f = t
+	e.ProcExecution = PROC_EXECUTION
+	//e.ProcExecution = false
 	return nil
 }
 

@@ -7,9 +7,16 @@ import (
 	"testing"
 )
 
+var (
+	//TEST_CMD = `echo`
+	TEST_CMD = `echo.static`
+)
+
 func TestCommand(t *testing.T) {
 	exe := newEchoExec(t)
-	pp.Println(exe)
+	if false {
+		pp.Println(exe)
+	}
 	defer func() {
 		if err := exe.Close(); err != nil {
 			t.Fatalf("close error: %s", err)
@@ -40,7 +47,7 @@ func BenchmarkCommand(b *testing.B) {
 func newEchoExec(t testing.TB) *Exec {
 	// lookup echo binary that is provided on all unix systems
 	// and it's not a built-in opposed to `ls` and `type`
-	path, err := exec.LookPath("echo")
+	path, err := exec.LookPath(TEST_CMD)
 	if err != nil {
 		t.Fatal(err)
 	}

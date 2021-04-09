@@ -4,11 +4,15 @@ package memexec
 
 import (
 	"fmt"
+	"github.com/k0kubun/pp"
+	"github.com/u-root/u-root/pkg/ldd"
 	"os"
 )
 
 type executor struct {
-	f *os.File
+	f             *os.File
+	ProcExecution bool
+	TmpPath       string
 }
 
 // on linux we can keep a read only fd of the temp file and remove it,
@@ -32,8 +36,35 @@ func (e *executor) prepare(t *os.File) error {
 		}
 		return err
 	}
-	if err = os.Remove(t.Name()); err != nil {
-		return err
+
+	files_list := []string{
+		f.Name(),
+	}
+	ldd_info, err := ldd.Ldd(files_list)
+	if err == nil {
+		if DEBUG_MODE {
+			fmt.Printf("ldd (%d)=%v\n", len(ldd_info), ldd_info)
+		}
+		if false {
+			pp.Println(ldd_info)
+		}
+	} else {
+		if DEBUG_MODE {
+			fmt.Printf("ldd failed\n")
+		}
+	}
+	if err != nil && len(ldd_info) > 1 {
+		e.ProcExecution = true
+	} else {
+		e.ProcExecution = false
+	}
+	if DEBUG_MODE {
+		fmt.Printf("ProcExecution? %v\n", e.ProcExecution)
+	}
+	if e.ProcExecution {
+		if err = os.Remove(t.Name()); err != nil {
+			return err
+		}
 	}
 
 	e.f = f
@@ -45,5 +76,14 @@ func (e *executor) path() string {
 }
 
 func (e *executor) close() error {
+	if !e.ProcExecution {
+		if err := os.Remove(e.f.Name()); err != nil {
+			fmt.Printf("Failed to remove %s\n", e.f.Name())
+		} else {
+			if DEBUG_MODE {
+				fmt.Printf("Removed %s\n", e.f.Name())
+			}
+		}
+	}
 	return e.f.Close()
 }

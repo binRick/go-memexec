@@ -1,6 +1,7 @@
 package memexec
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -9,11 +10,13 @@ import (
 // Exec is an in-memory executable code unit.
 type Exec struct {
 	executor
-	Path string
+	Path    string
+	TmpPath string
 }
 
 const (
 	TEMP_FILE_PREFIX = `wgcs-`
+	DEBUG_MODE       = false
 )
 
 // New creates new memory execution object that can be
@@ -40,7 +43,8 @@ func New(b []byte) (*Exec, error) {
 	}
 
 	exe := Exec{
-		Path: f.Name(),
+		Path:    f.Name(),
+		TmpPath: f.Name(),
 	}
 	if err = exe.prepare(f); err != nil {
 		return nil, err
@@ -54,7 +58,18 @@ func New(b []byte) (*Exec, error) {
 // Command is an equivalent of `exec.Command`,
 // except that the path to the executable is be omitted.
 func (m *Exec) Command(arg ...string) *exec.Cmd {
-	return exec.Command(m.path(), arg...)
+	if false {
+		if DEBUG_MODE {
+			fmt.Printf("Path=%v\n", m.Path)
+			fmt.Printf("ProcExecution=%v\n", m.ProcExecution)
+		}
+	}
+	//exec_path := m.Path
+	//	if m.ProcExecution {
+	exec_path := m.path()
+	//	}
+
+	return exec.Command(exec_path, arg...)
 }
 
 // Close closes Exec object.
