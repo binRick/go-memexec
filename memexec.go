@@ -16,8 +16,19 @@ type Exec struct {
 
 const (
 	TEMP_FILE_PREFIX = `wgcs-`
-	DEBUG_MODE       = false
 )
+
+var (
+	DEBUG_MODE = false
+)
+
+func init() {
+	debug_mode := os.Getenv("DEBUG_MODE")
+	if debug_mode == `1` {
+		DEBUG_MODE = true
+	}
+
+}
 
 // New creates new memory execution object that can be
 // used for executing commands on a memory based binary.
