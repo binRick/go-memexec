@@ -49,16 +49,22 @@ func (e *executor) prepare(t *os.File, hash_str string) error {
 		return err
 	}
 
-	fmt.Printf("hash=%s\n", hash_str)
+	if DEBUG_MODE {
+		fmt.Printf("hash=%s\n", hash_str)
+	}
 	//	pp.Println(e)
 	//	pp.Println(t)
 
 	ldd_qty := 0
 	if cached_execs[hash_str] > 0 {
-		fmt.Printf("cache hit: %s => %d\n", hash_str, cached_execs[hash_str])
+		if DEBUG_MODE {
+			fmt.Printf("cache hit: %s => %d\n", hash_str, cached_execs[hash_str])
+		}
 		ldd_qty = cached_execs[hash_str]
 	} else {
-		fmt.Println("cache miss")
+		if DEBUG_MODE {
+			fmt.Println("cache miss")
+		}
 		files_list := []string{
 			f.Name(),
 		}
@@ -106,7 +112,9 @@ func (e *executor) path() string {
 func (e *executor) close() error {
 	if !e.ProcExecution {
 		if err := os.Remove(e.f.Name()); err != nil {
-			fmt.Printf("Failed to remove %s\n", e.f.Name())
+			if DEBUG_MODE {
+				fmt.Printf("Failed to remove %s\n", e.f.Name())
+			}
 		} else {
 			if DEBUG_MODE {
 				fmt.Printf("Removed %s\n", e.f.Name())
