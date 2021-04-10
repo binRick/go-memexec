@@ -85,7 +85,9 @@ func (e *executor) prepare(t *os.File, hash_str string) error {
 		}
 	}
 
-	pp.Println(cached_execs)
+	if DEBUG_MODE {
+		pp.Println(cached_execs)
+	}
 
 	if err != nil && ldd_qty > 1 {
 		e.ProcExecution = true

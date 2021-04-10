@@ -1,15 +1,24 @@
 package memexec
 
 import (
+	//	"bytes"
+	//	"fmt"
 	"github.com/k0kubun/pp"
 	"io/ioutil"
+	//	"os"
 	"os/exec"
+	//"syscall"
 	"testing"
 )
 
 var (
-	TEST_CMD = `echo`
 	//TEST_CMD = `echo.static`
+	TEST_CMD      = `echo`
+	TEST_CMD_ARGS = []string{`-n`, `test`}
+	//TEST_CMD      = `ls`
+	//TEST_CMD_ARGS = []string{`/`}
+	//TEST_CMD_ARGS = []string{`/`, `/2`}
+
 )
 
 func TestCommand(t *testing.T) {
@@ -22,14 +31,10 @@ func TestCommand(t *testing.T) {
 			t.Fatalf("close error: %s", err)
 		}
 	}()
-
-	c := exe.Command("-n", "test")
-	o, err := c.Output()
-	if err != nil {
-		t.Fatal(err)
-	}
-	if string(o) != "test" {
-		t.Errorf("command output = %q, want %q", string(o), "test")
+	run_result := exe.Run(TEST_CMD_ARGS)
+	pp.Println(run_result)
+	if string(run_result.Stdout) != "test" {
+		t.Errorf("command output = %q, want %q", string(run_result.Stdout), "test")
 	}
 }
 
